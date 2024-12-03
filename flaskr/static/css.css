@@ -1,0 +1,31 @@
+/* Reset basic margins and paddings */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Style for the bulleted list */
+.main-links {
+    margin-top: 2rem; /* Add spacing above the list */
+    padding-left: 2rem; /* Add padding for the bullet points */
+    font-size: 1.5rem; /* Increase font size for visibility */
+    list-style-type: disc; /* Add bullets */
+}
+
+/* Style for list items */
+.main-links li {
+    margin-bottom: 1rem; /* Add spacing between list items */
+}
+
+/* Style for the links */
+.main-links a {
+    text-decoration: none; /* Remove underline */
+    color: #007bff; /* Bootstrap primary blue */
+    transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+/* Hover effect for the links */
+.main-links a:hover {
+    color: #0056b3; /* Darker blue on hover */
+}
