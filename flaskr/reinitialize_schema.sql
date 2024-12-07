@@ -15,14 +15,6 @@ CREATE TABLE cradlepoint_routers (
     CHECK (cradlepoint_mac_address LIKE '00:30:%') -- Validates MAC address starts with 00:30
 );
 
-CREATE TABLE cradlepoint_router_status (
-    cradlepoint_router_id INTEGER PRIMARY KEY AUTOINCREMENT, -- Unique router status ID
-    cradlepoint_mac_address CHAR(17) NOT NULL, -- References cradlepoint_routers
-    online_status CHAR(1) NOT NULL CHECK (online_status IN ('Y', 'N')), -- 'Y' for online, 'N' for offline
-    FOREIGN KEY (cradlepoint_mac_address) REFERENCES cradlepoint_routers(cradlepoint_mac_address)
-        ON DELETE CASCADE -- Deletes status if router is deleted
-);
-
 CREATE TABLE customer_installation_info (
     customer_account_number INTEGER PRIMARY KEY, -- User-inputted account number
     cradlepoint_mac_address CHAR(17) NOT NULL, -- References cradlepoint_routers
