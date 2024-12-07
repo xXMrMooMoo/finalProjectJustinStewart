@@ -3,11 +3,47 @@
 ### Final Project
 ### db.py
 
+import click
 import sqlite3
 from flask import current_app, g
-import click
 import bcrypt
-from flask import request, redirect, url_for, session, flash
+import sys
+
+
+def get_db_standalone():
+    """Standalone connection to the SQLite database."""
+    conn = sqlite3.connect('data.db')
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def add_admin_user_standalone(username, password):
+    """Add a new admin user when running as a standalone script."""
+    conn = get_db_standalone()
+    password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    try:
+        conn.execute(
+            "INSERT INTO admin_users (username, password_hash) VALUES (?, ?)",
+            (username, password_hash),
+        )
+        conn.commit()
+        return "Admin user created successfully."
+    except sqlite3.IntegrityError:
+        return "Username already exists."
+    finally:
+        conn.close()
+
+#   added this to handle handling regarding adding admin users from the cli
+if __name__ == "__main__":
+    # Check for CLI arguments
+    if len(sys.argv) != 3:
+        print("Usage: python db.py <username> <password>")
+    else:
+        # Extract username and password from arguments
+        username, password = sys.argv[1], sys.argv[2]
+
+        # Add user
+        print(add_admin_user_standalone(username, password))
 
 
 def get_db():
@@ -19,6 +55,7 @@ def get_db():
         )
         g.db.row_factory = sqlite3.Row
     return g.db
+
 
 
 def close_db(e=None):

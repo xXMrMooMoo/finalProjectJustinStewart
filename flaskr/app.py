@@ -64,24 +64,36 @@ def admin_dashboard():
     if not session.get("admin_logged_in"):
         return redirect(url_for("admin_login"))
 
-    message = None
     if request.method == "POST":
         if "create_user" in request.form:
             username = request.form.get("username")
             password = request.form.get("password")
             confirm_password = request.form.get("confirm_password")
+
             if password != confirm_password:
-                message = "Passwords do not match. Please try again."
+                # Flash an error message if passwords don't match
+                flash("Passwords do not match. Please try again.", "danger")
             else:
+                # Try creating the user and flash success or error messages
                 message = db.add_admin_user(username, password)
+                if "already exists" in message:
+                    flash(message, "danger")
+                else:
+                    flash(f"Admin user '{username}' created successfully.", "success")
+
         elif "delete_user" in request.form:
             username = request.form.get("username")
             message = db.delete_admin_user(username)
+            flash(message, "info")
+
         elif "reinit_db" in request.form:
             message = db.reinitialize_database()
+            flash(message, "warning")
 
     admin_users = db.list_admin_users()
-    return render_template("admin_dashboard.html", admin_users=admin_users, message=message)
+    return render_template("admin_dashboard.html", admin_users=admin_users)
+
+
 
 @app.context_processor
 def inject_user_status():
@@ -90,20 +102,44 @@ def inject_user_status():
     username = session.get("admin_username") if is_logged_in else None
     return {"is_logged_in": is_logged_in, "username": username}
 
-@app.route("/full-cradlepoint-inventory")
-def full_cradlepoint_inventory():
+
+@app.route("/full-inventory")
+def full_inventory():
     db_connection = db.get_db()
     cursor = db_connection.cursor()
-    # Fetch all column names dynamically
-    cursor.execute("PRAGMA table_info(cradlepoint_routers);")
-    columns = [col[1] for col in cursor.fetchall()]  # Extract column names
-    # Fetch all entries and the count
-    cursor.execute("SELECT * FROM cradlepoint_routers;")
-    rows = cursor.fetchall()
-    cursor.execute("SELECT COUNT(*) FROM cradlepoint_routers;")
-    count = cursor.fetchone()[0]
+    # Define tables with their custom display formats
+    tables = [
+        {"name": "cradlepoint_routers", "display": "Cradlepoint Inventory"},
+        {"name": "carrier_information_iccid1", "display": "Carrier Information (ICCID1)"},
+        {"name": "carrier_information_iccid2", "display": "Carrier Information (ICCID2)"},
+        {"name": "customer_installation_info", "display": "Customer Installation Information"},
+    ]
+    inventory_data = []
+
+    for table in tables:
+        table_name = table["name"]
+        display_name = table["display"]
+        # Fetch column names
+        cursor.execute(f"PRAGMA table_info({table_name});")
+        columns = [col[1] for col in cursor.fetchall()]  # Column names
+        # Fetch rows
+        cursor.execute(f"SELECT * FROM {table_name};")
+        rows = cursor.fetchall()
+        # Count rows
+        cursor.execute(f"SELECT COUNT(*) FROM {table_name};")
+        count = cursor.fetchone()[0]
+        # Append data for rendering
+        inventory_data.append({
+            "table_name_display": display_name,  # Custom table name display
+            "table_name": table_name,  # Raw table name for reference
+            "columns": columns,
+            "rows": rows,
+            "count": count,
+        })
     cursor.close()
-    return render_template("full_cradlepoint_inventory.html", columns=columns, rows=rows, count=count)
+    return render_template("full_inventory.html", inventory_data=inventory_data)
+
+
 
 
 
