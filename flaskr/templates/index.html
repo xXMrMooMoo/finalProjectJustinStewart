@@ -24,7 +24,7 @@
                             <a class="nav-link" href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Option 1</a>
+                            <a class="nav-link" href="{{ url_for('full_cradlepoint_inventory') }}">Full Cradlepoint Inventory</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Option 2</a>
@@ -61,10 +61,22 @@
         </nav>
     <div class="container mt-4">
         <h1 class="text-center">Cradlepoint Inventory</h1>
+
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(category_filter=["info"]) %}
+            {% if messages %}
+                <div class="alert alert-info text-center" role="alert">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
         <ul class="d-flex flex-column align-items-center">
             <li><a href="{{ url_for('home') }}">Home</a></li>
-            <li><a href="{{ url_for('admin_dashboard') }}">Option 1 (Admin Dashboard)</a></li>
-            <li><a href="#">Option 2</a></li>
+            <li><a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a></li>
+            <li><a href="{{ url_for('full_cradlepoint_inventory') }}">Full Cradlepoint Inventory</a></li>
             <li><a href="#">Option 3</a></li>
             <li><a href="#">Option 4</a></li>
             <li><a href="#">Option 5</a></li>

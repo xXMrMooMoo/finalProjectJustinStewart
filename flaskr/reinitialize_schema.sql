@@ -1,11 +1,11 @@
--- Drop existing tables if they exist
+-- Drop non-admin tables if they exist
 DROP TABLE IF EXISTS carrier_information_iccid2;
 DROP TABLE IF EXISTS carrier_information_iccid1;
 DROP TABLE IF EXISTS customer_installation_info;
 DROP TABLE IF EXISTS cradlepoint_router_status;
 DROP TABLE IF EXISTS cradlepoint_routers;
-DROP TABLE IF EXISTS admin_users;
 
+-- Re-create tables
 CREATE TABLE cradlepoint_routers (
     router_id INTEGER NOT NULL,
     cradlepoint_mac_address CHAR(17) PRIMARY KEY, -- Format: XX:XX:XX:XX:XX:XX
@@ -46,13 +46,6 @@ CREATE TABLE carrier_information_iccid2 (
     FOREIGN KEY (iccid) REFERENCES cradlepoint_routers(iccid2)
         ON DELETE CASCADE -- Deletes SIM info if router is deleted
 );
--- Create a table for admin users
-CREATE TABLE admin_users (
-    admin_id INTEGER PRIMARY KEY AUTOINCREMENT, -- Unique admin ID
-    username VARCHAR(50) NOT NULL UNIQUE, -- Admin username
-    password_hash VARCHAR(255) NOT NULL -- Hashed password
-);
-
 -- Insert sample data into cradlepoint_routers, this is my real testing lab equipment.
 INSERT INTO cradlepoint_routers (router_id, cradlepoint_mac_address, model, iccid1, iccid2)
 VALUES

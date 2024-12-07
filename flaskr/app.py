@@ -29,42 +29,82 @@ def home():
 if __name__ == "__main__":
     app.run(debug=True)
 
+
 @app.route("/admin-login", methods=["GET", "POST"])
 def admin_login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        if db.verify_admin_user(username, password):
-            session["admin_logged_in"] = True
-            session["admin_username"] = username  # Store the username in the session
-            print(f"Logged in as: {username}")
-            return redirect(url_for("admin_dashboard"))
+
+        user_exists = db.get_admin_user(username)  # Check if the user exists
+        if not user_exists:
+            flash(f"Incorrect username: {username}", "danger")
+        elif not db.verify_admin_user(username, password):
+            flash(f"Incorrect password for username: {username}", "danger")
         else:
-            print("Login failed.")
-            flash("Invalid credentials, please try again.")
+            session["admin_logged_in"] = True
+            session["admin_username"] = username
+            # Redirect to dashboard without flashing the welcome message here
+            return redirect(url_for("admin_dashboard"))
+
     return render_template("admin_login.html")
 
 
 @app.route("/admin-logout")
 def admin_logout():
+    username = session.get("admin_username", "Unknown User")  # Get the username from the session
     session.pop("admin_logged_in", None)
-    session.pop("admin_username", None)  # Remove the username
-    flash("You have been logged out.")
-    return redirect(url_for("home"))
+    session.pop("admin_username", None)
+    flash(f"User: {username} logged out.", "info")  # Pass a flash message
+    return redirect(url_for("home"))  # Redirect to the index page
 
-@app.route("/admin-dashboard")
+
+@app.route("/admin-dashboard", methods=["GET", "POST"])
 def admin_dashboard():
     if not session.get("admin_logged_in"):
-        print("Admin not logged in. Redirecting to login page.")
         return redirect(url_for("admin_login"))
-    print("Admin logged in. Rendering admin_dashboard.html.")
-    return render_template("admin_dashboard.html")
 
+    message = None
+    if request.method == "POST":
+        if "create_user" in request.form:
+            username = request.form.get("username")
+            password = request.form.get("password")
+            confirm_password = request.form.get("confirm_password")
+            if password != confirm_password:
+                message = "Passwords do not match. Please try again."
+            else:
+                message = db.add_admin_user(username, password)
+        elif "delete_user" in request.form:
+            username = request.form.get("username")
+            message = db.delete_admin_user(username)
+        elif "reinit_db" in request.form:
+            message = db.reinitialize_database()
+
+    admin_users = db.list_admin_users()
+    return render_template("admin_dashboard.html", admin_users=admin_users, message=message)
 
 @app.context_processor
 def inject_user_status():
     """Inject login status and username into all templates."""
-    is_logged_in = "admin_logged_in" in session and session["admin_logged_in"]
-    username = session.get("admin_username", "Unknown User") if is_logged_in else None
+    is_logged_in = session.get("admin_logged_in", False)
+    username = session.get("admin_username") if is_logged_in else None
     return {"is_logged_in": is_logged_in, "username": username}
+
+@app.route("/full-cradlepoint-inventory")
+def full_cradlepoint_inventory():
+    db_connection = db.get_db()
+    cursor = db_connection.cursor()
+    # Fetch all column names dynamically
+    cursor.execute("PRAGMA table_info(cradlepoint_routers);")
+    columns = [col[1] for col in cursor.fetchall()]  # Extract column names
+    # Fetch all entries and the count
+    cursor.execute("SELECT * FROM cradlepoint_routers;")
+    rows = cursor.fetchall()
+    cursor.execute("SELECT COUNT(*) FROM cradlepoint_routers;")
+    count = cursor.fetchone()[0]
+    cursor.close()
+    return render_template("full_cradlepoint_inventory.html", columns=columns, rows=rows, count=count)
+
+
+
 

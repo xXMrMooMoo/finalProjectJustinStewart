@@ -62,3 +62,44 @@ def verify_admin_user(username, password):
         return False
     return bcrypt.checkpw(password.encode('utf-8'), user["password_hash"])
 
+def delete_admin_user(username):
+    """Delete an admin user by username."""
+    db = get_db()
+    db.execute("DELETE FROM admin_users WHERE username = ?", (username,))
+    db.commit()
+    return f"Admin user {username} deleted successfully."
+
+def delete_admin_user(username):
+    """Delete an admin user by username."""
+    db = get_db()
+    user = db.execute("SELECT * FROM admin_users WHERE username = ?", (username,)).fetchone()
+    if user:
+        db.execute("DELETE FROM admin_users WHERE username = ?", (username,))
+        db.commit()
+        return f"User {username} deleted successfully."
+    else:
+        return f"User {username} does not exist."
+
+
+def reinitialize_database():
+    """Reinitialize the database, dropping and recreating non-admin tables."""
+    db = get_db()
+    with current_app.open_resource("reinitialize_schema.sql") as f:
+        db.executescript(f.read().decode("utf8"))
+    return "Database reinitialized (admin_users table preserved)."
+
+
+
+def list_admin_users():
+    """List all admin usernames."""
+    db = get_db()
+    users = db.execute("SELECT username FROM admin_users").fetchall()
+    return [user["username"] for user in users]
+
+def get_admin_user(username):
+    """Retrieve an admin user by username."""
+    db = get_db()
+    user = db.execute("SELECT * FROM admin_users WHERE username = ?", (username,)).fetchone()
+    return user
+
+
