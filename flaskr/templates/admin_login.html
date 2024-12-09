@@ -21,9 +21,9 @@
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('full_inventory') }}">Full Inventory</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="{{ url_for('router_status_lookup') }}">Router Status Lookup</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="{{ url_for('router_detail_finder') }}">Router Detail Finder</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="{{ url_for('add_a_router') }}">Add a Router</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('router_status_lookup') }}">Router Status Lookup</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('router_detail_finder') }}">Router Detail Finder</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('add_a_router') }}">Add a Router</a></li>
                 </ul>
                 <ul class="navbar-nav">
                     {% if is_logged_in %}
