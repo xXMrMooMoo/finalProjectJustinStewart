@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- admin_login.html -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,7 +12,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url_for('home') }}">MyApp</a>
+            <a class="navbar-brand" href="{{ url_for('home') }}">Cradlepoint Inventory</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -20,10 +21,9 @@
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('full_inventory') }}">Full Inventory</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Option 2</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Option 3</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Option 4</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Option 5</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{ url_for('router_status_lookup') }}">Router Status Lookup</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{ url_for('router_detail_finder') }}">Router Detail Finder</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{ url_for('add_a_router') }}">Add a Router</a></li>
                 </ul>
                 <ul class="navbar-nav">
                     {% if is_logged_in %}

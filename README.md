@@ -38,6 +38,6 @@ Justin Stewart
 
 ## Acknowledgments
 
-* [Django Documentation](https://docs.djangoproject.com/)
+* [Cradlepoint Developer Documentation](https://developer.cradlepoint.com/)
 * [Django Toolbar](https://django-debug-toolbar.readthedocs.io/en/latest/installation.html)
 * [Bootstrap Modals](https://getbootstrap.com/docs/4.0/components/modal/)
