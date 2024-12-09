@@ -4,6 +4,8 @@
 ### functions.py
 
 import configparser
+from cgitb import handler
+
 import requests
 import time
 import os
@@ -15,12 +17,15 @@ def start_logging():
     log_file = "log.csv"
     create_log_file(log_file)
     logging.basicConfig(
-                        filename=log_file,
-                        filemode='w',
                         format='%(asctime)s.%(msecs)03d,%(levelname)s,%(message)s',
                         datefmt='%m/%d/%Y %H:%M:%S',
-                        level=logging.INFO
+                        level=logging.INFO,
+                        handlers=[
+                            logging.FileHandler(log_file, mode='a'),  # Log to File
+                            logging.StreamHandler()         # Log to Terminal
+                        ]
                         )
+    return
 
 #   [Portable]
 #   Creates a log file if one does not exist and writes headers

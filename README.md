@@ -25,6 +25,13 @@ It consists of 7 Pages:
   * Log in page for admins
 
 ### Pip Install Instructions/Dependencies
+* This program required Cradlepoint NCM API keys to work properly. A file must be named root_rw.ini located in the same folder as app.py, the file must be structured like so:
+  * [KEYS]
+  * X-ECM-API-ID = xx
+  * X-ECM-API-KEY= xx
+  * X-CP-API-ID = xx
+  * X-CP-API-KEY = xx
+
 
 * Please run the following to install all the packages:
 ```
@@ -51,7 +58,7 @@ By default, when running, this program will output a link to navigate the user t
 ```
 http://127.0.0.1:5000
 ```
-
+The program will also have a log streaming to the terminal, and also in a log.csv file.
 ## Authors
 Justin Stewart
 

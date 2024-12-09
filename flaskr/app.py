@@ -10,6 +10,7 @@ from functions import *  # Custom functions for additional functionality
 
 # Initialize the Flask app
 app = Flask(__name__)
+start_logging()
 app.secret_key = 'your_secret_key'  # Secret key for session management
 
 # Configuration for the SQLite database
