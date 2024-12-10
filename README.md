@@ -52,6 +52,7 @@ python db.py AddAdminUser username password
 ```
 flask run
 ```
+* To visit the website then click on the link or navigate to http://127.0.0.1:5000
 
 ### Output
 By default, when running, this program will output a link to navigate the user to a html environment:
