@@ -194,7 +194,7 @@ def router_status_lookup():
             else:
                 status_message = f"Router ID {router_id} not found in the inventory."
         except Exception:
-            status_message = f'Router ID {router_id} not found via API call.'
+            status_message = f'Router ID {router_id} not found via API call, or missing API keys.'
 
     cursor.close()
     return render_template("router_status_lookup.html", columns=columns, rows=rows, status_message=status_message)

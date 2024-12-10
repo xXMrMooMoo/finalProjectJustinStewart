@@ -67,3 +67,5 @@ Justin Stewart
 * [Cradlepoint Developer Documentation](https://developer.cradlepoint.com/)
 * [Flask Tutorial](https://flask.palletsprojects.com/en/stable/tutorial/)
 * [Bootstrap Modals](https://getbootstrap.com/docs/4.0/components/modal/)
+* [Chat GPT](https://chatgpt.com/)
+* [Chat GPT try/except](https://chatgpt.com/share/67580de6-2140-8008-88a4-ac8192d7dfec)
